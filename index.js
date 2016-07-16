@@ -1,6 +1,7 @@
 var express = require('express');
 var fileupload = require('express-fileupload');
 var util = require('util');
+var path = require('path');
 
 var app = express();
 
@@ -122,6 +123,9 @@ app.post('/upload',function(req,res){
 		return;
 	}
 	var file = req.files.image;
+	var timeInMss = Date.now();
+	var extension = path.extname(req.files.sampleFile.name);
+	var newName = String(timeInMss)+extension;
 	file.mv(__dirname + '/public/resources/images/'+file.name, function(err){
 		if(err){
 			res.status(500).send(err);
