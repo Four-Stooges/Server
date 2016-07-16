@@ -65,10 +65,12 @@ app.post('/userNGO', function(req,res){
 	});
 });
 
+// Handling a new register request
 app.get('/registerUser', function(req,res){
 	res.sendFile(__dirname + '/public/resources/html/registerUser.html');
 });
 
+// Registering a new user
 app.post('/registerUser', function(req,res){
 	 userName   = req.body.email;
 	 password   = req.body.pwd;
@@ -87,10 +89,12 @@ app.post('/registerUser', function(req,res){
 	 });
 });
 
+// Handling a new NGO register request
 app.get('/registerNGO', function(req,res){
 	res.sendFile(__dirname + '/public/resources/html/registerNGO.html');
 });
 
+// Registering a new NGO
 app.post('/registerNGO', function(req,res){
 	 userName   = req.body.email;
 	 password   = req.body.pwd;
@@ -105,5 +109,38 @@ app.post('/registerNGO', function(req,res){
 	 	}
 	 });
 });
+
+// Handling request to upload a new person
+app.get('/upload', function(req,res){
+	res.sendFile(__dirname + '/public/resources/html/upload.html');
+});
+
+// Uploading a new person
+app.post('/upload',function(req,res){
+	if(!req.files){
+		res.send('No files were uploaded.');
+		return;
+	}
+	var file = req.files.image;
+	file.mv(__dirname + '/public/resources/images/'+file.name, function(err){
+		if(err){
+			res.status(500).send(err);
+		}
+		else{
+			var location = req.body.location;
+			var path = __dirname + '/public/resources/images/'+file.name;
+			var parameters = String(location) +' ' + path;
+			var exec = require('child_process').exec('python ../APIs/a.py '+parameters, function(error,stdout,stderr){});
+			exec.on('exit', function(code){
+				if(code == 0)
+					res.sendFile(__dirname + '/public/resources/html/added.html');
+				else{
+					res.send('Error Occurred!! Not able to upload');
+				}
+			})
+		}
+	});
+});
+
 app.listen(3000);
 console.log('Server running at http://127.0.0.1:3000/');
