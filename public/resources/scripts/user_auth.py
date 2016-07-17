@@ -13,8 +13,7 @@ try:
 	pwd   = sys.argv[2]
 
 	check = collection.find({"email":uName , "password":pwd})
-	if check:
-		# Exit code when valid login credentials
+	if check != None:
 		exit(0)
  	# Exit code interpreted as invalid credentials
 	exit(1)
