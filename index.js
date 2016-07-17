@@ -114,7 +114,7 @@ app.post('/registerNGO', function(req,res){
 
 // Handling request to upload a new person
 app.get('/upload', function(req,res){
-	res.sendFile(__dirname + '/public/resources/html/upload.html');
+	res.sendFile(__dirname + '/public/resources/html/userhome.html');
 });
 
 // Uploading a new person
@@ -135,14 +135,19 @@ app.post('/upload',function(req,res){
 			var lat = req.body.lat;
 			var long = req.body.long;
 			var parameters = newName+' '+lat+' '+long;
-			var exec = require('child_process').exec('python3 ./public/resources/scripts/upload.py '+parameters, function(error,stdout,stderr){});
-			exec.on('exit', function(code){
-				if(code == 0)
-					res.sendFile(__dirname + '/public/resources/html/added.html');
-				else{
-					res.send('Error Occurred!! Not able to upload');
-				}
-			})
+			var parameters2 = usr+' '+newName;
+			var exec = require('child_process').exec('python3 ./public/resources/scripts/update_user.py '+parameters2, function(error,stdout,stderr){});
+			exec.on('exit',function(code){
+				var exec1 = require('child_process').exec('python3 ./public/resources/scripts/upload.py '+parameters, function(error,stdout,stderr){});
+				exec1.on('exit', function(code){
+					if(code == 0)
+						res.sendFile(__dirname + '/public/resources/html/added.html');
+					else{
+						res.send('Error Occurred!! Not able to upload');
+					}
+				});
+			});
+			
 		}
 	});
 });

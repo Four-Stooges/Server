@@ -14,7 +14,7 @@ pwd   = sys.argv[2]
 userName = sys.argv[3]
 contact = sys.argv[4]
 
-result = collection.insert_one({"email":userEmail, "password":pwd,"name":userName,"contact":contact})
+result = collection.insert_one({"email":userEmail, "password":pwd,"name":userName,"contact":contact,"personIDs":[]})
 if result:
 	exit(0)
 exit(1)

@@ -10,11 +10,16 @@ db = client['rescueHomeless']
 collection = db['userDB']
 
 userEmail = sys.argv[1]
-pwd   = sys.argv[2]
-userName = sys.argv[3]
-contact = sys.argv[4]
+imgID  	  =  sys.argv[2]
 
-result = collection.insert_one({"email":userEmail, "password":pwd,"name":userName,"contact":contact})
+# Fetching the record to be updated
+record = collection.find({'email':userEmail})
+# Fetching the field to be updated
+pids = record['personIDs']
+# Changing the list of persons
+pids.append(imgID)
+# Updating the record in the database
+result = collection.update_one({'email':userEmail},{"$set": {"personIDs":pids}})
 if result:
 	exit(0)
 exit(1)
